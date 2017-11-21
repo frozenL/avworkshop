@@ -17,26 +17,45 @@ MOVIES_COUNT = 30
 # initialize imdb instance 
 imdb = Imdb(anonymize=True)
 
+# put contents in an array of Movie objects
+def __getMovies(movies):
+    print('\n')
+    print('\n')
+    retMovies = []
+    for movie in movies:
+        if 'object' in movie.keys():
+            movie = movie['object']
+        print(movie)
+        movie_id = "id"
+        movie_title = "Movie"
+        movie_image_url = "http://via.placeholder.com/125x175"
+        if 'tconst' in movie.keys():
+            movie_id = movie['tconst']
+        if 'title' in movie.keys():
+            movie_title = "Movie" + movie['title']
+        if 'image' in movie.keys() and 'url' in movie['image'].keys():
+            movie_image_url = movie['image']['url']
+        movieObj = Movie.create(movie_id, movie_title, movie_image_url)
+        retMovies.append(movieObj)
+    return retMovies
+
 # gets top 250 movies from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_top_250_movies():
-
-    return _get_placeholder_movies(MOVIES_COUNT)
+    return __getMovies(imdb.top_250())
 
 # gets popular movies from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_movies():
-
-    return _get_placeholder_movies(MOVIES_COUNT)
+    return __getMovies(imdb.popular_movies())
 
 # gets popular shows from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_shows():
-
-    return _get_placeholder_movies(MOVIES_COUNT)
+    return __getMovies(imdb.popular_shows())
 
 # gets one movie from imdb
 # example model is in docs/movie-details.json
